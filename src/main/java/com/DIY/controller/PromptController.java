@@ -5,6 +5,9 @@ import com.DIY.service.LLMService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/prompt")
 public class PromptController {
@@ -16,8 +19,12 @@ public class PromptController {
     }
 
     @PostMapping
-    public ResponseEntity<String> sendPrompt(@RequestBody PromptRequest request) {
+    public ResponseEntity<Map<String, String>> sendPrompt(@RequestBody PromptRequest request) {
         String response = llmService.chatWithMemory(request.getPrompt());
-        return ResponseEntity.ok(response);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("result", response); // key should match what your frontend expects
+
+        return ResponseEntity.ok(result);
     }
 }
