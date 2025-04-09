@@ -19,7 +19,7 @@ public class MessageParserService {
 
     @PostConstruct
     public void init() {
-        baseDir = new File("generated-output");
+        baseDir = new File("../generated-output");
         if (!baseDir.exists()) baseDir.mkdirs();
     }
 
