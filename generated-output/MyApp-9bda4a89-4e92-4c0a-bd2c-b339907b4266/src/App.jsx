@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
   const [todos, setTodos] = useState(() => {
-    // Load todos from local storage on initial render
+    // Get todos from local storage on initial load
     const storedTodos = localStorage.getItem('todos');
     return storedTodos ? JSON.parse(storedTodos) : [];
   });
@@ -14,7 +14,6 @@ function App() {
     // Save todos to local storage whenever the todos state changes
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
-
 
   const handleInputChange = (e) => {
     setNewTodo(e.target.value);
@@ -42,12 +41,12 @@ function App() {
   return (
     <div className="app-container">
       <h1>Todo List</h1>
-      <div className="input-section">
+      <div className="input-container">
         <input
           type="text"
+          placeholder="Add new todo"
           value={newTodo}
           onChange={handleInputChange}
-          placeholder="Add new todo"
         />
         <button onClick={handleAddTodo}>Add</button>
       </div>
@@ -69,5 +68,4 @@ function App() {
 }
 
 export default App;
-
 ```
