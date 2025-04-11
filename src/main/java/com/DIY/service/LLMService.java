@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class LLMService {
@@ -19,8 +21,6 @@ public class LLMService {
     private final ChatMemory chatMemory;
     private final ChatLanguageModel gemini;
     private final MessageParserService parserService;
-
-    private static final List<String> APP_NAMES = Arrays.asList("todo", "blog", "store", "chat", "notes");
 
     public LLMService(@Value("${google.api.key}") String apiKey, MessageParserService parserService) {
         this.parserService = parserService;
@@ -36,24 +36,35 @@ public class LLMService {
     }
 
     public Map<String, String> chatWithMemory(String prompt) {
+        // Step 1: Extract app name from the prompt
+        String appName = extractAppNameFromPrompt(prompt);
+
+        // Step 2: Interact with Gemini
         chatMemory.add(new UserMessage(prompt));
         List<ChatMessage> messages = chatMemory.messages();
         String response = String.valueOf(gemini.chat(messages));
         chatMemory.add(new AiMessage(response));
 
-        String randomAppName = getRandomAppName();
-        String uniqueId = parserService.parseAndGenerate(response, randomAppName);
+        // Step 3: Generate files/folders and get the folder name
+        String folderName = parserService.parseAndGenerate(response, appName);
 
+        // Step 4: Return results
         Map<String, String> result = new HashMap<>();
         result.put("result", response);
-        result.put("appId", uniqueId);
-        result.put("appName", randomAppName);
-
+        result.put("folderName", folderName);
+        result.put("appName", appName);
         return result;
     }
 
-    private String getRandomAppName() {
-        Random random = new Random();
-        return APP_NAMES.get(random.nextInt(APP_NAMES.size()));
+    private String extractAppNameFromPrompt(String prompt) {
+        String defaultName = "MyApp";
+        try {
+            Pattern pattern = Pattern.compile("<appName>(.*?)</appName>", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(prompt);
+            if (matcher.find()) {
+                return matcher.group(1).trim().toLowerCase().replaceAll("[^a-z0-9]", "");
+            }
+        } catch (Exception ignored) {}
+        return defaultName;
     }
 }

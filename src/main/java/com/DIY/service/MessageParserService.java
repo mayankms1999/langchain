@@ -32,13 +32,15 @@ public class MessageParserService {
         createFolders(message, appRoot);
         createFiles(message, appRoot);
 
+        // Return the generated folder name (UUID) for reference
         return uniqueId;
     }
 
     private void createFolders(String message, File appRoot) {
         Matcher matcher = FOLDER_PATTERN.matcher(message);
         while (matcher.find()) {
-            File folder = new File(appRoot, matcher.group(1));
+            String folderPath = matcher.group(1).trim();
+            File folder = new File(appRoot, folderPath);
             if (!folder.exists()) folder.mkdirs();
         }
     }
@@ -46,15 +48,15 @@ public class MessageParserService {
     private void createFiles(String message, File appRoot) {
         Matcher matcher = FILE_PATTERN.matcher(message);
         while (matcher.find()) {
-            String path = matcher.group(1);
-            String content = matcher.group(2);
+            String filePath = matcher.group(1).trim();
+            String content = matcher.group(2).trim();
 
-            File file = new File(appRoot, path);
+            File file = new File(appRoot, filePath);
             file.getParentFile().mkdirs();
             try (FileWriter writer = new FileWriter(file)) {
-                writer.write(content.trim());
+                writer.write(content);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to write file: " + path, e);
+                throw new RuntimeException("Failed to write file: " + filePath, e);
             }
         }
     }
