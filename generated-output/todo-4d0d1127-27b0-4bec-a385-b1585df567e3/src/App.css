@@ -10,34 +10,36 @@
 
 h1 {
   text-align: center;
+  margin-bottom: 20px;
   color: #333;
 }
 
 .input-container {
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 input[type="text"] {
-  flex: 1;
+  flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 button {
   padding: 10px 15px;
-  margin-left: 10px;
-  border: none;
-  background-color: #007bff;
+  background-color: #4CAF50;
   color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  margin-left: 10px;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #3e8e41;
 }
 
 .todo-list {
@@ -61,20 +63,21 @@ button:hover {
 }
 
 .todo-item span {
-  flex: 1;
+  flex-grow: 1;
 }
 
 .todo-item button {
-  background-color: #dc3545;
+  background-color: #f44336;
   margin-left: 10px;
 }
 
 .todo-item button:hover {
-  background-color: #c82333;
+  background-color: #da190b;
 }
 
-.todo-item.completed span {
+.completed {
   text-decoration: line-through;
-  color: #777;
+  color: #888;
 }
+
 ```

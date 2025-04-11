@@ -57,14 +57,44 @@ public class LLMService {
     }
 
     private String extractAppNameFromPrompt(String prompt) {
-        String defaultName = "MyApp";
-        try {
-            Pattern pattern = Pattern.compile("<appName>(.*?)</appName>", Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(prompt);
-            if (matcher.find()) {
-                return matcher.group(1).trim().toLowerCase().replaceAll("[^a-z0-9]", "");
-            }
-        } catch (Exception ignored) {}
-        return defaultName;
+        // Try 1: extract from <appName> tag if it exists
+        Pattern tagPattern = Pattern.compile("<appName>(.*?)</appName>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher matcher = tagPattern.matcher(prompt);
+        if (matcher.find()) {
+            return sanitizeAppName(matcher.group(1));
+        }
+
+        // Try 2: look for lines like "Create a [AppName] application"
+        Pattern sentencePattern = Pattern.compile("create (?:an?|the)?\\s*([A-Z][a-zA-Z0-9]*)\\s*(app|application)", Pattern.CASE_INSENSITIVE);
+        matcher = sentencePattern.matcher(prompt);
+        if (matcher.find()) {
+            return sanitizeAppName(matcher.group(1));
+        }
+
+        // Try 3: match camel case ending with "App"
+        Pattern camelAppPattern = Pattern.compile("\\b([A-Z][a-zA-Z0-9]*App)\\b");
+        matcher = camelAppPattern.matcher(prompt);
+        if (matcher.find()) {
+            return sanitizeAppName(matcher.group(1));
+        }
+
+        // Try 4: extract from keywords like "I want an app for X"
+        Pattern genericPattern = Pattern.compile("app for ([a-zA-Z0-9\\s]+)", Pattern.CASE_INSENSITIVE);
+        matcher = genericPattern.matcher(prompt);
+        if (matcher.find()) {
+            return sanitizeAppName(matcher.group(1));
+        }
+
+        // Final fallback
+        return "MyApp";
     }
+
+    private String sanitizeAppName(String rawName) {
+        return rawName.trim()
+                .replaceAll("\\s+", "")  // remove spaces
+                .replaceAll("[^a-zA-Z0-9]", "")  // remove non-alphanumeric
+                .toLowerCase();
+    }
+
+
 }

@@ -4,29 +4,32 @@ import './App.css';
 
 function App() {
   const [todos, setTodos] = useState(() => {
-    // Get todos from local storage on initial load
-    const storedTodos = localStorage.getItem('todos');
-    return storedTodos ? JSON.parse(storedTodos) : [];
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+      return JSON.parse(savedTodos);
+    } else {
+      return [];
+    }
   });
   const [newTodo, setNewTodo] = useState('');
 
   useEffect(() => {
-    // Save todos to local storage whenever the todos state changes
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  const handleInputChange = (e) => {
-    setNewTodo(e.target.value);
-  };
 
-  const handleAddTodo = () => {
+  const addTodo = () => {
     if (newTodo.trim() !== '') {
-      setTodos([...todos, { id: Date.now(), text: newTodo.trim(), completed: false }]);
+      setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
       setNewTodo('');
     }
   };
 
-  const handleToggleComplete = (id) => {
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const toggleComplete = (id) => {
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -34,21 +37,17 @@ function App() {
     );
   };
 
-  const handleDeleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-
   return (
     <div className="app-container">
-      <h1>Todo List</h1>
+      <h1>Todo App</h1>
       <div className="input-container">
         <input
           type="text"
           placeholder="Add new todo"
           value={newTodo}
-          onChange={handleInputChange}
+          onChange={(e) => setNewTodo(e.target.value)}
         />
-        <button onClick={handleAddTodo}>Add</button>
+        <button onClick={addTodo}>Add</button>
       </div>
       <ul className="todo-list">
         {todos.map((todo) => (
@@ -56,10 +55,10 @@ function App() {
             <input
               type="checkbox"
               checked={todo.completed}
-              onChange={() => handleToggleComplete(todo.id)}
+              onChange={() => toggleComplete(todo.id)}
             />
             <span>{todo.text}</span>
-            <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>
