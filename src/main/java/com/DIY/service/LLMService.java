@@ -86,8 +86,7 @@ public class LLMService {
 
     private String sanitizeAppName(String rawName) {
         return rawName.trim()
-                .replaceAll("[^a-zA-Z0-9 ]", "") // allow space
-                .replaceAll("\\s{2,}", " ");     // collapse multiple spaces
+                .replaceAll("[^a-zA-Z0-9 ]", "")
+                .replaceAll("\\s{2,}", " ");
     }
-
 }
