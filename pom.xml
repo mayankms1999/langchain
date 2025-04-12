@@ -22,58 +22,34 @@
 		</repository>
 	</repositories>
 	<dependencies>
-
-		<!-- Spring Boot Starter (Web + JSON + Embedded Tomcat) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<!-- REST Client (New in Spring Boot 3.2) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
-		<!-- Lombok (optional) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-		<!-- Spring Boot Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-google-ai-gemini</artifactId>
 			<version>1.0.0-beta2</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j</artifactId>
 			<version>0.27.1</version>
 		</dependency>
-
-		<!-- Gemini Integration -->
-		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-google-ai-gemini</artifactId>
-			<version>1.0.0-beta2</version>
-		</dependency>
-		<!-- Gemini model integration -->
-<!--		<dependency>-->
-<!--			<groupId>dev.langchain4j</groupId>-->
-<!--			<artifactId>langchain4j-google-ai</artifactId>-->
-<!--			<version>0.26.0</version>-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<dependencyManagement>
@@ -90,7 +66,6 @@
 
 	<build>
 		<plugins>
-			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

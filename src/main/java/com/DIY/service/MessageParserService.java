@@ -2,7 +2,6 @@ package com.DIY.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +14,6 @@ public class MessageParserService {
 
     private static final Pattern FOLDER_PATTERN = Pattern.compile("<folder>(.*?)</folder>");
     private static final Pattern FILE_PATTERN = Pattern.compile("<action fileName=\"(.*?)\">([\\s\\S]*?)</action>");
-
     private File baseDir;
 
     @PostConstruct
@@ -27,13 +25,10 @@ public class MessageParserService {
     public String parseAndGenerate(String message, String appName) {
         String uniqueId = UUID.randomUUID().toString();
         String finalFolderName = appName + "-" + uniqueId;
-
         File appRoot = new File(baseDir, finalFolderName);
         appRoot.mkdirs();
-
         createFolders(message, appRoot);
         createFiles(message, appRoot);
-
         return finalFolderName;
     }
 
@@ -50,7 +45,6 @@ public class MessageParserService {
         while (matcher.find()) {
             String path = matcher.group(1).trim();
             String content = matcher.group(2).trim();
-
             File file = new File(appRoot, path);
             file.getParentFile().mkdirs();
             try (FileWriter writer = new FileWriter(file)) {
